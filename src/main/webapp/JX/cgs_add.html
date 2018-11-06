@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>AOS敖翔在线</title>
+		<link rel="stylesheet" href="css/zTreeStyle/zTreeStyle.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/bmgl.css" />
+		<script type="text/javascript" src="js/jquery.min.js" ></script>
+		
+	</head>
+	<body>
+		<div class="left_nav">
+			<div class="left_logo">
+				<img src="images/left_logo.png" />
+			</div>
+			<ul class="nav_one" data-ride="collapse" id="menu">
+				<li class="nav_list"> <a href="#" class="auto nav_two"> <span><img src="images/nav_icon1.png"/></span><b>系统管理</b> <i></i></a>
+					<ul class="sub">
+						<li class=""> <a href="#" class="auto"> <i class="fa fa-circle-o text-xs"></i> <span>角色管理</span></a> </li>
+						<li class=""> <a href="#" class="auto"> <i class="fa fa-circle-o text-xs"></i> <span>部门管理</span></a> </li
+					</ul>
+				</li>				
+								
+						
+			</ul>
+			<div class="nav_bottom">
+				<p class="xg"><a href="#">修改密码</a></p>
+				<p class="tc"><a href="#">退出账号</a></p>
+			</div>
+			
+		</div>
+		<div class="right_wrap">
+			<div class="gl_top">
+				
+				<div class="yh">赵瑞，你好</div>
+				<h3>重庆市峰华驾校渝北报名点</h3>
+				<div class="gl_right">
+					<a href="#"></a>
+					<a href="#"></a>
+				</div>
+				<div class="position">
+					<div class="wei">
+						<p>您当前的位置&gt;系统管理&gt;<a href="#">驾校管理新增</a></p>						
+					</div>
+					<div class="time">2017年10月12日 14:11:42 星期四</div>
+				</div>
+			</div>
+			<div class="add_content">
+				  <div class="ax">
+			        <div class="ax_left">
+			        	省份：
+			        	<select id="city">
+			        		<option>--请选择---</option>
+			        		<option value="0">重庆</option>
+			        		<option value="1">四川</option>
+			        	</select>
+			        	市辖：
+			        	<select id="city_1">
+			        		<option>--请选择---</option>
+			        		<option value="0">重庆</option>
+			        		<option value="1">成都</option>
+			        	</select>
+			        </div>
+		
+			      </div>
+				 <h4>对应分所：<input type="button" id="add_icon" value="新增"/></h4>
+				  <div class="cgs_add">
+				  	  
+				  	  <ul>
+				  	  	<li>分所代码：<input type="text" id="fsdm"/>分所名称：<input type="text" id="fsname"/><b>&Chi;</b></li>				  	  	
+				  	  </ul>
+				  </div>
+				  <h5><input id="add_cgs" type="button"/ value="提交"></h5>
+			</div>
+		</div>
+		<script>
+			$(function() {
+	        		
+				$('.nav_one .nav_two').click(function(e){
+					if($(this).attr('href')=="#"){
+						 
+						$(this).parent().toggleClass('active');
+						$(this).siblings('ul').slideToggle();
+						$(this).parent().siblings().find('ul').slideUp();
+						$(this).parent().siblings().removeClass('active');
+					}
+					
+				})
+				$('#add_icon').click(function(){
+					console.log(2);
+					$('.cgs_add ul').append('<li>分所代码：<input type="text" class="fsdm"/>分所名称：<input type="text" class="fsname"/><b>&Chi;</b></li>');
+					$('.cgs_add ul li b').bind('click',function(){
+						$(this).parent().remove();
+					});
+					
+					var sel_data=[]
+					var city;
+					var city1;
+					var codes='';
+					var fsname='';
+					$('.cgs_add ul li').each(function(){
+						$(this).find('.fsdm').change(function(){
+							 codes=$(this).val();
+							 city=$('#city').val();
+							 city1=$('#city_1').val();
+							 
+						});
+						$(this).find('.fsname').change(function(){
+							 fsname=$(this).val();
+							 city=$('#city').val();
+							 city1=$('#city_1').val();
+						});
+						var sel_option={
+						"cityId":city1,
+						"code":codes,
+						"createUser":'',
+						"provinceId":city,
+						"name":fsname
+					     };
+					     sel_data.push(sel_option)
+					})
+					
+				});
+			    
+				
+		});
+                   
+			var url="http://192.168.3.154:6075/api/division/add";
+			
+			$('#add_cgs').click(function(){		 
+		         $.ajax({		 
+		             type: "POST",		 
+		             url: url,		 
+		             data: {addDivisionRoList:sel_data},		 
+		             dataType: "json",		 
+		             success: function(data){		 
+		                 console.log(data)
+		                 if(data.code==0){
+		                 	alert(data.message)
+		                 }else{
+		                 	alert(data.message)
+		                 }
+		            }
+
+		    });		 
+		});	
+		</script>
+	</body>
+</html>

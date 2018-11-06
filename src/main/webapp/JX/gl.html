@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>AOS傲雄在线</title>
+		<link rel="stylesheet" href="css/zTreeStyle/zTreeStyle.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/bmgl.css" />
+		<script type="text/javascript" src="js/jqgrid/jquery.min.js" ></script>
+				
+		<!--jqgrid-->
+		<!--<link rel="stylesheet" href="js/jqgrid/css/ui.jqgrid.css" />
+		<link rel="stylesheet" href="js/jqgrid/css/css/redmond/jquery-ui-1.8.16.custom.css" />
+		<script type="text/javascript" src="js/jqgrid/js/jquery.jqGrid.src.js"></script>
+		<script type="text/javascript" src="js/jqgrid/js/i18n/grid.locale-cn.js"></script>
+		<link rel="stylesheet" href="js/jqgrid/ui.jqgrid-bootstrap.css">
+		<link rel="stylesheet" href="js/jqgrid/ui.jqgrid.css">
+		<link rel="stylesheet" href="js/jqgrid/ui.jqgrid-bootstrap-ui.css">-->
+		<link rel="stylesheet" href="js/bootstrap.min.css" />
+		<link rel="stylesheet" href="plugins/jqgrid/ui.jqgrid-bootstrap-ui.css" />
+		<link rel="stylesheet" href="plugins/jqgrid/ui.jqgrid-bootstrap.css" />
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="plugins/jqgrid/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="plugins/jqgrid/jquery.jqGrid.min.js"></script>
+		<!--bootstrap.min.css
+	ui.jqgrid-bootstrap-ui.css
+	ui.jqgrid-bootstrap.css
+	jquery.min.js
+	bootstrap.min.js
+	grid.locale-cn.js
+	jquery.jqGrid.min.js-->
+
+	</head>
+	<body>
+		<div class="left_nav">
+			<div class="left_logo">
+				<img src="images/left_logo.png" />
+			</div>
+			<ul class="nav_one" data-ride="collapse" id="menu">
+				<li class="nav_list"> <a href="#" class="auto nav_two"> <span><img src="images/nav_icon1.png"/></span><b>系统管理</b> <i></i></a>
+					<ul class="sub">
+						<li class=""> <a href="#" class="auto"> <i class="fa fa-circle-o text-xs"></i> <span>角色管理</span></a> </li>
+						<li class=""> <a href="#" class="auto"> <i class="fa fa-circle-o text-xs"></i> <span>部门管理</span></a> </li
+					</ul>
+				</li>				
+								
+						
+			</ul>
+			<div class="nav_bottom">
+				<p class="xg"><a href="#">修改密码</a></p>
+				<p class="tc"><a href="#">退出账号</a></p>
+			</div>
+			
+		</div>
+		<div class="right_wrap">
+			<div class="gl_top">
+				
+				<div class="yh">赵瑞，你好</div>
+				<h3>重庆市峰华驾校渝北报名点</h3>
+				<div class="gl_right">
+					<a href="#"></a>
+					<a href="#"></a>
+				</div>
+				<div class="position">
+					<div class="wei">
+						<p>您当前的位置&gt;系统管理&gt;<a href="#">部门管理</a></p>						
+					</div>
+					<div class="time">2017年10月12日 14:11:42 星期四</div>
+				</div>
+			</div>
+			<div class="gl_content">
+				<div class="add">
+					<h3><a>新增</a><a>修改</a><a>删除</a></h3>
+					<div class="gl_cong_main">
+						<ul class="ztree" id="treeDemo">
+							
+						</ul>
+						<p>选中组织机构后才能新增岗位</p>
+					</div>
+				</div>
+				<div class="gl_list" id="testIframe" name="testIframe">
+					<div class="gllist_top">
+						<p><span>岗位代码：<input type="text" placeholder="请输入岗位代码"/></span><span>岗位名称：<input type="text" placeholder="请输入岗位名称"/></span></p>
+						
+					     <p class="gl_cx"><span>查询</span><span>清空</span></p>
+					</div>
+					<div class="gl_main">
+						<table id="jqGrid" style="text-align:center;"></table>
+						<div id="jqGridPager"></div>
+						<!--<h5><span>新增</span><span>修改</span><span>删除</span></h5>
+						<h6><span>序号</span><span>岗位代码</span><span>岗位名称</span><span>岗位描述</span><span>创建人</span><span>创建时间</span></h6>
+						<ul class="gl_li">
+							<li><span>1</span><span>001</span><span>市场部经理</span><span>xxxxxxx</span><span>张三分</span><span>2015-02-15 12:00:00</span></li>
+						</ul>
+						<div class="gl_bottom">
+							<p>当前显示 1 - 5 条记录  共 15 条记录</p>
+							<div class="gl_page">
+								<select>
+									<option>1</option>
+									<option>2</option>
+								</select>
+								<span class="prev"><img src="images/page1.png"/></span>
+								<span class="prev_all"><img src="images/page2.png"/></span>
+								第<input type="text" />页  共3页
+								<span class="next"><img src="images/page4.png"/></span>
+								<span class="next_all"><img src="images/page5.png"/></span>
+								<span class="resh"><img src="images/page6.png"/></span>
+							</div>
+						</div>-->
+					</div>
+				
+				</div>
+				
+			</div>
+		</div>
+		<script type="text/javascript" src="js/common.js" ></script>
+		<script type="text/javascript" src="js/jquery.ztree.core.js" ></script>
+		<script>
+		$(function() {
+				$('.nav_one .nav_two').click(function(e){
+					if($(this).attr('href')=="#"){						 
+						$(this).parent().toggleClass('active');
+						$(this).siblings('ul').slideToggle();
+						$(this).parent().siblings().find('ul').slideUp();
+						$(this).parent().siblings().removeClass('active');
+					}
+					
+				})						       										
+				
+		});		
+
+		var setting = {
+			data : {
+				simpleData : {
+					enable : true
+				}
+			},
+			callback : {
+				onClick : zTreeOnClick
+			}
+		};
+
+		function zTreeOnClick(e, treeId, treeNode) {
+		    //alert(treeNode.name+"==="+treeNode.depCode); //获取当前结点上的相关属性数据，执行相关逻辑
+			$("#jqGrid").jqGrid('setGridParam', {
+               postData:{'depCode':treeNode.depCode}, //发送数据 
+               page:1 
+            }).trigger("reloadGrid");
+		};
+		$(document).ready(function(){
+			$("#jqGrid").jqGrid({
+			styleUI: 'Bootstrap',//设置jqgrid的全局样式为bootstrap样式 
+				url: webUrl+"/api/department/list?depCode=A001",
+				mtype:"POST",
+				datatype: "json",
+				colModel: [
+					{label: 'id', name: 'id', index: 'id', key: true, hidden: true},
+					{label: '岗位名称', name: 'name', index: 'name', width: 80},
+					{label: '部门名称', name: 'depName', index: 'depName', width: 80},
+					{label: '操作', name: 'id', index: 'id', width: 140, formatter: function (value, col, row) {
+						return '<span class="label label-success"><i-button type="primary"  onclick="usercard('+value+')">删除<i-button></span>  <span class="label label-success"><i-button type="primary"  onclick="userIntegral('+value+')">修改<i-button></span>';
+					}}],
+				viewrecords: true,
+				height: 385,
+				rowNum: 1,
+				rowList: [1, 2, 5],
+				rownumbers: true,
+				rownumWidth: 25,
+				autowidth: true,
+				multiselect: true,
+				pager: "#jqGridPager",
+				jsonReader: {
+					root: "data.records",
+					page: "data.current",
+					total: "data.pages",
+					records: "data.total"
+				},
+				prmNames: {
+					pageIndex: "page",
+					rows: "limit",
+					order: "order"
+				},
+				gridComplete: function () {
+					$("#jqGrid").closest(".ui-jqgrid-bdiv").css({"overflow-x": "hidden"});
+				}
+			});
+			 $.ajax({
+				type: "post",
+				url: webUrl+"/api/department/getDepTree?depCode=A001",
+				success: function (data) {
+					$.fn.zTree.init($("#treeDemo"), setting, data.data); //加载数据
+				}
+			  });
+		});
+		
+		var url=webUrl+"/service/department/addDepBranch"
+		
+		$.ajax({		 
+		             type: "POST",		 
+		             url: url,		 
+		             data: {username:$("#username").val(), password:$("#password").val()},		 
+		             dataType: "json",		 
+		             success: function(data){		 
+		                 //console.log(data)
+		                 /*if(code>0){
+		                 	window.location.replace("http://192.168.3.154:8080/JX/gl.html");
+		                 }else{
+		                 	alert(data.message)
+		                 }*/
+		            }
+
+		    });	
+		</script>
+	</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>AOS敖翔在线</title>
+		<link rel="stylesheet" href="css/zTreeStyle/zTreeStyle.css" />
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/bmgl.css" />
+		<script type="text/javascript" src="js/jquery.min.js" ></script>
+		
+	</head>
+	<body>
+		<div class="left_nav">
+			<div class="left_logo">
+				<img src="images/left_logo.png" />
+			</div>
+			<ul class="nav_one" data-ride="collapse" id="menu">
+				<li class="nav_list"> <a href="#" class="auto nav_two"> <span><img src="images/nav_icon1.png"/></span><b>系统管理</b> <i></i></a>
+					<ul class="sub">
+						<li class=""> <a href="#" class="auto"> <i class="fa fa-circle-o text-xs"></i> <span>角色管理</span></a> </li>
+						<li class=""> <a href="#" class="auto"> <i class="fa fa-circle-o text-xs"></i> <span>部门管理</span></a> </li
+					</ul>
+				</li>				
+								
+						
+			</ul>
+			<div class="nav_bottom">
+				<p class="xg"><a href="#">修改密码</a></p>
+				<p class="tc"><a href="#">退出账号</a></p>
+			</div>
+			
+		</div>
+		<div class="right_wrap">
+			<div class="gl_top">
+				
+				<div class="yh">赵瑞，你好</div>
+				<h3>重庆市峰华驾校渝北报名点</h3>
+				<div class="gl_right">
+					<a href="#"></a>
+					<a href="#"></a>
+				</div>
+				<div class="position">
+					<div class="wei">
+						<p>您当前的位置&gt;系统管理&gt;<a href="#">驾校管理新增</a></p>						
+					</div>
+					<div class="time">2017年10月12日 14:11:42 星期四</div>
+				</div>
+			</div>
+			<div class="add_content">
+				  <div class="ax">
+			        <div class="ax_left">
+			        	省份：<select><option>--请选择---</option></select>市辖：<select><option>--请选择---</option></select>
+			        </div>
+			        <div class="ax_right">
+			        	<input type="text"  value="查询"/>
+			        	<input type="text"  value="清空"/>
+			        </div>
+			      </div>
+				 <h5 class="cgs_listtitle"><span><img src="images/u254.png"/>新增</span><span><img src="images/u259.png"/>修改</span><span><img src="images/u249.png"/>删除</span></h5>
+				 <div class="cgs_listmain">
+				 	<table>
+				  	<tr>
+				  		<th>序号</th>
+				  		<th>省-市</th>
+				  		<th>对应分所</th>
+				  		<th>创建人</th>
+				  		<th>创建时间</th>
+				  
+				  	</tr>
+				  	<tr>
+				  		<td>1</td>
+				  		<td>山东省</td>
+				  		<td>一分所、二分所</td>
+				  		<td>张三</td>
+				  		<td>2015-02-15 12:00:00</td>
+				  	
+				  	</tr>
+				  </table>
+				 </div>
+				 <div class="gl_bottom">
+					<p>当前显示 1 - 5 条记录  共 15 条记录</p>
+					<div class="gl_page">
+						<select>
+							<option>1</option>
+							<option>2</option>
+						</select>
+						<span class="prev"><img src="images/page1.png"/></span>
+						<span class="prev_all"><img src="images/page2.png"/></span>
+						第<input type="text" />页  共3页
+						<span class="next"><img src="images/page4.png"/></span>
+						<span class="next_all"><img src="images/page5.png"/></span>
+						<span class="resh"><img src="images/page6.png"/></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			$(function() {
+	        		
+				$('.nav_one .nav_two').click(function(e){
+					if($(this).attr('href')=="#"){						 
+						$(this).parent().toggleClass('active');
+						$(this).siblings('ul').slideToggle();
+						$(this).parent().siblings().find('ul').slideUp();
+						$(this).parent().siblings().removeClass('active');
+					}
+					
+				})						       										
+				
+		});
+			var url='';
+			$.ajax({		 
+	             type: "POST",		 
+	             url: ul,		 
+	             data: {},		 
+	             dataType: "json",		 
+	             success: function(data){		 
+	                 console.log(data)
+	                 if(data.code==0){
+	                 	
+	                 }else{
+	                 	alert(data.message)
+	                 }
+	            }
+
+		    });	
+		</script>
+	</body>
+</html>
