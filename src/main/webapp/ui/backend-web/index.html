@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="layui/css/layui.css" />
+    <link rel="stylesheet" href="static/css/style.css" />
+    <script type="text/javascript" src="static/js/jquery.min.js" ></script>
+    <script type="text/javascript" src="layui/layui.js" ></script>
+    <!--[if lt IE 9]>
+    <script src="static/js/html5shiv.min.js"></script>
+    <script src="static/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<!--菜单-->
+<div class="layui-side layui-bg-black nav layui-list">
+    <a href="#" class="logo"><img src="static/images/logo.png"/></a>
+    <div class="layui-side-scroll">
+        <ul class="layui-nav layui-nav-tree layui-bg-b layui-inline" lay-filter="demo">
+            <li class="layui-nav-item layui-nav-itemed">
+                <a href="javascript:;"><i class="layui-icon"><img src="static/images/nav_icon1.png"/></i> <cite>系统管理</cite> <span class="layui-nav-more"></span></a>
+                <dl class="layui-nav-child">
+                    <dd><a target="pageiframe" href="./aos/notice/list.html">通知管理</a></dd>
+                    <dd><a target="pageiframe" href="./aos/contract/list.html">合同管理</a></dd>
+                    <dd><a href="#">用户管理</a></dd>
+                    <dd><a href="#">角色管理</a></dd>
+                    <dd><a href="#">部门管理</a></dd>
+                    <dd><a href="#">分校管理</a></dd>
+                    <dd><a href="#">报名点管理</a></dd>
+                    <dd><a href="#">消息模板</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;" ><i class="layui-icon"><img src="static/images/nav_icon2.png"/></i> <cite>考试管理</cite> <span class="layui-nav-more"></span></a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">学员预约考试</a></dd>
+                    <dd><a href="">122批量约考</a></dd>
+                    <dd><a href="">消息推送</a></dd>
+                    <dd><a href="">取消预约</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;" ><i class="layui-icon"><img src="static/images/nav_icon3.png"/></i> <cite>学员管理</cite> <span class="layui-nav-more"></span></a>
+                <dl class="layui-nav-child">
+                    <dd><a href="school/student/studentList.html" target="pageiframe">学员管理列表</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;" ><i class="layui-icon"><img src="static/images/nav_icon4.png"/></i> <cite>教练管理</cite> <span class="layui-nav-more"></span></a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">教练新增</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;" ><i class="layui-icon"><img src="school-web/static/images/nav_icon5.png"/></i> <cite>车辆管理</cite> <span class="layui-nav-more"></span></a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">车辆新增</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item">
+                <a href="javascript:;" ><i class="layui-icon"><img src="school-web/static/images/nav_icon6.png"/></i> <cite>统计管理</cite> <span class="layui-nav-more"></span></a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">合格率统计</a></dd>
+                </dl>
+            </li>
+
+        </ul>
+    </div>
+    <ul class="layui-nav nav_bottom nav">
+        <li><a href="#"><img src="static/images/xg.png"/><cite>修改密码</cite></a></li>
+        <li><a href="#"><img src="static/images/tc.png"/><cite>退出当前账号</cite></a></li>
+    </ul>
+</div>
+<!--菜单-->
+
+<!--header-->
+<div class="layui-header">
+
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+    <ul class="layui-nav layui-layout-left bg-color head_pt">
+        <li class="layui-nav-item">
+            <a href="javascript:;">
+                <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">
+                赵瑞，您好</a>
+        </li>
+        <span class="layui-nav-bar" style="left: 76px; top: 55px; width: 0px; opacity: 0;"></span></ul>
+    <div class="title"><h5>重庆市峰华驾校渝北报名点</h5></div>
+    <ul class="bg-color layui-layout-right ax_topicon">
+        <li class="layui-nav-item"><a href=""></a></li>
+        <li class="layui-nav-item"><a href=""></a></li>
+    </ul>
+
+</div>
+<!--header-->
+
+<!--移动端-->
+
+<div class="site-tree-mobile layui-hide slide-btn">
+    <i class="layui-icon"></i>
+</div>
+<div class="site-mobile-shade bg"></div>
+<!--移动端-->
+
+<!-- 主体内容 -->
+<div class="layui-body" id="LAY_app_body">
+    <div class="layadmin-tabsbody-item layui-show">
+        <iframe src="cgs.html" frameborder="0" name="pageiframe" class="layadmin-iframe"></iframe>
+    </div>
+</div>
+
+
+<script>
+    $('.layui-side-scroll').css('height',$(window).height()-$('.logo').innerHeight()-$('.nav_bottom').innerHeight()-20);
+    $(window).resize(function(){
+        $('.layui-side-scroll').css('height',$(window).height()-$('.logo').innerHeight()-$('.nav_bottom').innerHeight()-20);
+    });
+    $('.slide-btn').click(function () {
+        $('body').addClass('site-mobile');
+        $(this).hide();
+    });
+    $('.bg').click(function () {
+        $('body').removeClass('site-mobile');
+    })
+
+    //导航
+    layui.use('element', function(){
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            // layer.msg(elem.text());
+        });
+    });
+</script>
+
+</body>
+</html>

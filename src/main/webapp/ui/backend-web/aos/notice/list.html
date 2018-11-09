@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>通知管理列表</title>
+    <link href="../../layui/css/layui.css" rel="stylesheet">
+    <script src="../../static/js/jquery.min.js"></script>
+    <script src="../../static/js/jquery.cookie.js"></script>
+    <script src="../../layui/layui.js"></script>
+    <script src="../../static/js/base.js"></script>
+    <script src="../../static/js/ax.js"></script>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <!--查询-->
+        <!--<div class="layui-form layui-card-header layuiadmin-card-header-auto">-->
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">公告标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="noticeTitle" placeholder="请输入公告标题" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">公告内容</label>
+                    <div class="layui-input-block">
+                        <input type="text"  id="noticeContent" placeholder="请输入公告内容" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">发布人</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="publisher" placeholder="请输入发布人" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">发布时间起</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" id="fromTime">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">发布时间至</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" id="toTime">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="reset" class="layui-btn">清空</button>
+                    <button id="doSearch" class="layui-btn">搜索</button>
+                </div>
+            </div>
+        </form>
+
+
+        <!--数据列表展示-->
+        <div class="layui-card-body">
+            <script type="text/html" id="optToolbar">
+                <div style="padding-bottom: 10px;">
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-event="addNotice" >新增</button>
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-event="updateNotice" >编辑</button>
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-event="delNotice">删除</button>
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-event="viewNotice">查看</button>
+                </div>
+            </script>
+
+            <table class="layui-hide" id="dataListTable"
+                   lay-filter="active"></table>
+        </div>
+
+
+    </div>
+</div>
+
+
+</body>
+
+<script>
+
+    var table;
+    var tableObj;
+
+    layui.use(['table','form','laydate','layer'], function() {
+        table = layui.table;
+        var form = layui.form,
+            layDateFrom = layui.laydate,
+            layDateTo = layui.laydate,
+            layer=layui.layer;
+
+        // 初始化日期控件
+        layDateFrom.render({
+            elem: '#fromTime'
+            // ,range: true
+        });
+        layDateTo.render({
+            elem: '#toTime'
+            // ,range: true
+        });
+
+        tableObj = ax.VTable({
+            id: 'loadDataList',
+            elem : '#dataListTable',
+            url : '/api/notice/list',
+            toolbar: '#optToolbar',
+            title:'通知列表',
+            cols : [ [ {
+                type : 'checkbox',
+                fixed : 'left'
+            }, {
+                field : 'id',
+                width : 80,
+                title : '序号',
+                sort : true,
+                fixed : 'left'
+            }, {
+                field : 'noticeTitle',
+                title : '标题',
+                width : 200,
+                fixed : 'left'
+            }, {
+                field : 'tipsTime',
+                width : 200,
+                title : '弹窗时间',
+            }, {
+                field : 'isTips',
+                width : 100,
+                title : '是否弹窗',
+            }, {
+                field : 'dispenseOrg',
+                minWidth : 150,
+                title : '权限',
+                sort : true
+            }, {
+                field : 'publisher',
+                width : 80,
+                title : '发布人'
+            }, {
+                field : 'publishTime',
+                width : 120,
+                title : '发布时间'
+            } ] ]
+
+        });
+
+        var $ = layui.$;
+
+        $('#doSearch').on('click', function(){
+            searchData();
+        });
+
+        //头工具栏事件
+        table.on('toolbar()', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'delNotice':
+                    var data = checkStatus.data;
+                    if(data.length<=0) {
+                        layer.open({
+                            title: '信息提示'
+                            ,content: '请选择删除的数据！'
+                        });
+                        break;
+                    }
+                    layer.confirm('确定需要删除选中的通知！', function (index) {
+                        var ids = [];
+                        for (var i = 0; i < data.length; i++) {
+                            ids.push(data[i].id);
+                        }
+                        delNotice(ids.join(","));
+                    })
+
+                    break;
+                case 'addNotice':
+                    layer.open({
+                        type: 2,
+                        area: ['90%', '80%'],
+                        fixed: true, //不固定
+                        maxmin: true,
+                        content: 'edit.html'
+                    });
+                    break;
+                case 'updateNotice':
+                    var data = checkStatus.data;
+                    if(data.length<=0) {
+                        layer.open({
+                            title: '信息提示'
+                            ,content: '请选择编辑的数据！'
+                        });
+                        break;
+                    }
+                    layer.open({
+                        type: 2,
+                        area: ['90%', '80%'],
+                        fixed: true, //不固定
+                        maxmin: true,
+                        content: 'edit.html?id=' + data[0].id
+                    });
+                    break;
+                case 'viewNotice':
+                    var data = checkStatus.data;
+                    if(data.length<=0) {
+                        layer.open({
+                            title: '信息提示'
+                            ,content: '请选择查看的数据！'
+                        });
+                        break;
+                    }
+                    layer.open({
+                        type: 2,
+                        area: ['90%', '80%'],
+                        fixed: true, //不固定
+                        maxmin: true,
+                        content: 'preview.html?id=' + data[0].id
+                    });
+                    layer.msg("查看");
+                    break;
+            };
+        });
+
+    });
+
+    function searchData() {
+        //执行重载
+        tableObj.reload({
+            page : {
+                curr: 1 //重新从第 1 页开始
+            },
+            where : {
+                noticeTitle : $('#noticeTitle').val(),
+                noticeContent : $('#noticeContent').val(),
+                fromTime : $('#fromTime').val(),
+                toTime : $('#toTime').val()
+            }
+        });
+    }
+
+    //删除通知
+    function delNotice(ids) {
+        var data={ids:ids};
+        ax.get({
+            url:"/api/notice/delete",
+            data:data,
+            success:function (res) {
+                parent.layer.msg("删除成功");
+                searchData();
+            },
+            error : function(request) {
+                parent.layer.msg("系统错误，联系管理员");
+            }
+        });
+    }
+</script>
+</html>

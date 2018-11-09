@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>班型管理列表</title>
+    <link href="../../../layui/css/layui.css" rel="stylesheet">
+    <script src="../../../static/js/jquery.min.js"></script>
+    <script src="../../../static/js/jquery.cookie.js"></script>
+    <script src="../../../layui/layui.js"></script>
+    <script src="../../../static/js/base.js"></script>
+    <script src="../../../static/js/ax.js"></script>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <!--查询-->
+        <!--<div class="layui-form layui-card-header layuiadmin-card-header-auto">-->
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">班型名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="className" placeholder="请输入班型名称" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">时间类型</label>
+                    <div class="layui-input-inline">
+                        <select id="timeType">
+                            <option value="1">创建时间</option>
+                            <option value="2">修改时间</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">创建时间起</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" id="fromTime">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">创建时间至</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" id="toTime">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="reset" class="layui-btn">清空</button>
+                    <button id="doSearch" class="layui-btn">搜索</button>
+                </div>
+            </div>
+        </form>
+
+
+        <!--数据列表展示-->
+        <div class="layui-card-body">
+            <script type="text/html" id="optToolbar">
+                <div style="padding-bottom: 10px;">
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-event="addClass" >新增</button>
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-event="updateClass" >编辑</button>
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-event="delClass">删除</button>
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-event="classCost">班型费用管理</button>
+                </div>
+            </script>
+
+            <table class="layui-hide" id="dataListTable"
+                   lay-filter="active"></table>
+        </div>
+
+
+    </div>
+</div>
+
+
+</body>
+
+<script>
+
+    var table;
+    var tableObj;
+
+    layui.use(['table','form','laydate','layer'], function() {
+        table = layui.table;
+        var form = layui.form,
+            layDateFrom = layui.laydate,
+            layDateTo = layui.laydate,
+            layer=layui.layer;
+
+        // 初始化日期控件
+        layDateFrom.render({
+            elem: '#fromTime'
+            // ,range: true
+        });
+        layDateTo.render({
+            elem: '#toTime'
+            // ,range: true
+        });
+
+        tableObj = ax.VTable({
+            id: 'loadDataList',
+            elem : '#dataListTable',
+            url : '/api/schoolclass/list',
+            toolbar: '#optToolbar',
+            title:'班型列表',
+            cols : [ [ {
+                type : 'checkbox',
+                fixed : 'left'
+            }, {
+                field : 'id',
+                width : 80,
+                title : '序号',
+                sort : true,
+                fixed : 'left'
+            }, {
+                field : 'classNumber',
+                title : '班级编号',
+                width : 200,
+                fixed : 'left'
+            }, {
+                field : 'name',
+                width : 200,
+                title : '班级名称',
+            }, {
+                field : 'type',
+                width : 100,
+                title : '班级类型',
+            }, {
+                field : 'peopleNumber',
+                width : 80,
+                title : '每车人数'
+            }, {
+                field : 'carId',
+                minWidth : 150,
+                title : '班级车型',
+                sort : true
+            }, {
+                field : 'learnId',
+                width : 120,
+                title : '学车时间'
+            }, {
+                field : 'reason',
+                width : 120,
+                title : '描述'
+            }, {
+                field : 'created',
+                width : 120,
+                title : '创建时间'
+            }, {
+                field : 'updated',
+                width : 120,
+                title : '修改时间'
+            } ] ]
+
+        });
+
+        var $ = layui.$;
+
+        $('#doSearch').on('click', function(){
+            searchData();
+        });
+
+        //头工具栏事件
+        table.on('toolbar()', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'delClass':
+                    var data = checkStatus.data;
+                    if(data.length<=0) {
+                        layer.open({
+                            title: '信息提示'
+                            ,content: '请选择删除的数据！'
+                        });
+                        break;
+                    }
+                    layer.confirm('确定需要删除选中的班型！', function (index) {
+                        var ids = [];
+                        for (var i = 0; i < data.length; i++) {
+                            ids.push(data[i].id);
+                        }
+                        delClass(ids.join(","));
+                    })
+
+                    break;
+                case 'addClass':
+                    layer.msg("新增");
+                    break;
+                case 'updateClass':
+                    var data = checkStatus.data;
+                    if(data.length<=0) {
+                        layer.open({
+                            title: '信息提示'
+                            ,content: '请选择编辑的数据！'
+                        });
+                        break;
+                    }
+                    layer.msg("编辑");
+                    break;
+                case 'classCost':
+                    var data = checkStatus.data;
+                    if(data.length<=0) {
+                        layer.open({
+                            title: '信息提示'
+                            ,content: '请选择查看的数据！'
+                        });
+                        break;
+                    }
+                    layer.msg("查看");
+                    break;
+            };
+        });
+
+    });
+
+    function searchData() {
+        //执行重载
+        tableObj.reload({
+            page : {
+                curr: 1 //重新从第 1 页开始
+            },
+            where : {
+                name : $('#className').val(),
+                timeType : $('#timeType').val(),
+                stime : $('#fromTime').val(),
+                etime : $('#toTime').val()
+            }
+        });
+    }
+
+    //删除通知
+    function delClass(ids) {
+        var data={ids:ids};
+        ax.get({
+            url:"/api/schoolclass/delete",
+            data:data,
+            success:function (res) {
+                parent.layer.msg("删除成功");
+                searchData();
+            },
+            error : function(request) {
+                parent.layer.msg("系统错误，联系管理员");
+            }
+        });
+    }
+</script>
+</html>

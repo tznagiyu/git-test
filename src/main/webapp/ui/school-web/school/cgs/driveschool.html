@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>驾校管理</title>
+    <link href="../../layui/css/layui.css" rel="stylesheet">
+    <link href="../student/css/layuiAdmin.css" rel="stylesheet">
+    <link href="../../static/css/style.css" rel="stylesheet">
+    <script src="../../static/js/jquery.min.js"></script>
+    <script src="../../layui/layui.js"></script>
+    <script src="../../static/js/base.js"></script>
+    <script src="../../static/js/ax.js"></script>
+    <script src="../../static/js/jquery.cookie.js"></script>
+
+</head>
+<body>
+<!--当前位置-->
+<div class="layui-fluid position">
+    <div class="layui-row">
+        <p class="layui-col-xs6">
+            <span class="layui-breadcrumb" lay-separator=">"><a><cite class="t">您当前的位置</cite></a><a href="">首页</a><a><cite>驾校管理</cite></a></span>
+        </p>
+        <p class="layui-col-xs6">2017年10月12日 14:11:42 星期四</p>
+    </div>
+</div>
+<!--当前位置-->
+
+
+<!--主体内容-->
+<div class="layui-fluid content">
+    <div class="layui-card">
+        <!--查询-->
+        <div class="layui-form layui-card-header layuiadmin-card-header-auto">
+            <div class="layui-form-item layui-row">
+                <div class="layui-inline layui-col-md3 layui-col-sm6">
+                    <label class="layui-form-label">驾校代码：</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="NameOrNum" placeholder="请输入驾校代码" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md3 layui-col-sm6">
+                    <label class="layui-form-label">驾校名称：</label>
+                    <div class="layui-input-block">
+                        <input type="text"  id="driverName" placeholder="请输入驾校名称" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+            </div>
+            <div class="layui-form-item layui-row layui-col-space10">
+                <div class="layui-inline layui-col-md3 layui-col-sm6">
+                    <label class="layui-form-label">省份：</label>
+                    <div class="layui-input-block">
+                        <select>
+                            <option value="0">四川</option>
+                            <option value="1">重庆</option>
+                            <option value="2">云南</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md3 layui-col-sm6">
+                    <label class="layui-form-label">市辖：</label>
+                    <div class="layui-input-block">
+                        <select name="sex">
+                            <option value="0">四川</option>
+                            <option value="1">重庆</option>
+                            <option value="2">云南</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md3 layui-col-sm6">
+                    <label class="layui-form-label">区县：</label>
+                    <div class="layui-input-block">
+                        <select name="sex">
+                            <option value="0">全部</option>
+                            <option value="1">新报名</option>
+                            <option value="2">在培</option>
+                            <option value="3">已结业</option>
+                            <option value="4">预警</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md3 layui-col-sm6">
+                    <label class="layui-form-label">所属管辖：</label>
+                    <div class="layui-input-block">
+                        <select name="sex">
+                            <option value="0">全部</option>
+                            <option value="1">新报名</option>
+                            <option value="2">在培</option>
+                            <option value="3">已结业</option>
+                            <option value="4">预警</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-inline layui-col-sm12">
+                    <button  class="layui-btn right-btn btn-left" data-type="reload">查询</button>
+                    <button  class="layui-btn right-btn" data-type="reload">清空</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!--数据列表展示-->
+        <div class="layui-card-body">
+            <script type="text/html" id="toolbarDemo">
+                <div>
+
+                    <button class="layui-btn layuiadmin-btn-useradmin ax-btn newsAdd_btn" lay-event="addDriver" >新增</button>
+                    <button class="layui-btn layuiadmin-btn-useradmin ax-btn" lay-event="updateStudet" >编辑</button>
+
+                    <button class="layui-btn layuiadmin-btn-useradmin ax-btn" lay-event="del">删除</button>
+                    <button class="layui-btn layuiadmin-btn-useradmin ax-btn" lay-event="export">查看</button>
+                </div>
+            </script>
+
+            <table class="layui-hide" id="activeListTbale"
+                   lay-filter="active"></table>
+        </div>
+
+
+    </div>
+</div>
+<!--主体内容-->
+
+</body>
+
+<script>
+
+
+
+    var table;
+
+    layui.use(['element','table','form','laydate','layer','upload'], function() {
+        table = layui.table;
+        var form = layui.form,
+            laydate = layui.laydate,
+            layer=layui.layer,
+            upload = layui.upload,
+            $ = layui.jquery,
+            element = layui.element;
+
+
+        //常规用法
+        laydate.render({
+            elem: '#activeTime'
+            ,range: true
+        });
+
+        var tableIns = ax.VTable({
+            elem : '#activeListTbale',
+            url : '/api/student/getStudentAll',
+            id: 'testReload',
+            toolbar: '#toolbarDemo',
+            title:'学员数据列表',
+            page:true,
+            cols : [ [ {
+                type : 'checkbox',
+                fixed : 'left'
+            }, {
+                field : 'id',
+                width : 80,
+                title : '序号',
+                sort : true,
+                fixed : 'left'
+            }, {
+                field : 'title',
+                title : '学员编号',
+                minWidth : 150,
+                fixed : 'left'
+            }, {
+                field : 'driversId',
+                width : 80,
+                title : '报名机构',
+                sort : true
+            }, {
+                field : 'name',
+                width : 80,
+                title : '姓名',
+                sort : true
+            }, {
+                field : 'certificatesNumber',
+                width : 80,
+                title : '证件号码',
+                sort : true
+            }, {
+                field : 'state',
+                width : 80,
+                title : '证件类型',
+                templet: '#stateTpl'
+            }, {
+                field : 'registeredSource',
+                width : 120,
+                title : '来源'
+            }, {
+                field : 'carId',
+                width : 180,
+                title : '准驾车型',
+                sort : true
+            }, {
+                field : 'updateTime',
+                width : 180,
+                title : '驾校名称',
+                sort : true
+            }, {
+                field : 'netStatusName',
+                width : 180,
+                title : '互联网状态',
+                sort : true
+            }, {
+                field : 'innerStatusName',
+                width : 180,
+                title : '业务状态',
+                sort : true
+            }, {
+                field : 'isBindingWechatName',
+                width : 180,
+                title : '是否微信绑定',
+                sort : true
+            },{
+                field : 'wechatOpenid',
+                width : 180,
+                title : '微信号',
+                sort : true
+            },{
+                field : 'created',
+                width : 180,
+                title : '创建时间',
+                sort : true
+            },
+                {
+                    fixed : 'right',
+                    width : 180,
+                    title : '操作',
+                    toolbar : '#barDemo'
+                } ] ]
+
+        });
+
+        var $ = layui.$,student = {
+            reload : function() {
+
+                var NameOrNum = $('#NameOrNum').val();
+                // var activeType = $('#activeType').val();
+                // var activeTag = $('#activeTag').val();
+                // var activeTime = $('#activeTime').val();
+
+                //执行重载
+                table.reload('testReload', {
+                    page : {
+                        curr: 1 //重新从第 1 页开始
+                    },
+                    where : {
+                        name : NameOrNum,
+
+                    }
+                });
+            },
+            reloadClean:function()
+            {
+                $('#NameOrNum').val('');
+                // $('#activeType').val("");
+                // $('#activeTag').val('');
+                // $('#activeTime').val('');
+                // $("#selectedvalue").val('');
+                form.render('select');//重新加载select
+                table.reload('testReload');
+            }
+        };
+
+
+        $('#show').on('click', function(){
+            var type = $(this).data('type');//获取reload
+            student[type] ? student[type].call(this) : '';
+        });
+
+
+        //头工具栏事件
+        table.on('toolbar()', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'del':
+                    var data = checkStatus.data;
+                    if(data.length<=0)
+                    {
+                        layer.open({
+                            title: '信息提示'
+                            ,content: '请选择删除的数据！'
+                        });
+                        break;
+                    }
+                    layer.confirm('确定是否需要删除学员！', function (index) {
+                        var ids = [];
+                        for (var i = 0; i < data.length; i++) {
+                            ids.push(data[i].id);
+                        }
+                        delStudent(ids);
+                    })
+
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+                    layer.msg('选中了：'+ data.length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选': '未全选');
+                    break;
+            };
+        });
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: '/upload/'
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            ,done: function(res){
+                //如果上传失败
+                if(res.code > 0){
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+            }
+            ,error: function(){
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function(){
+                    uploadInst.upload();
+                });
+            }
+        });
+
+    });
+
+
+    //删除用户
+    function delStudent(ids)
+    {
+        var data={ids:ids};
+        ax.get({
+            url:"/api/student/del",
+            data:data,
+            success:function (res) {
+                parent.layer.msg("删除成功");
+            },
+            error : function(request) {
+                parent.layer.msg("系统错误，联系管理员");
+            }
+        });
+    }
+
+
+
+
+
+
+</script>
+</html>

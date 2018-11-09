@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>车管所管理列表</title>
+    <link href="../../layui/css/layui.css" rel="stylesheet">
+    <script src="../../static/js/jquery.min.js"></script>
+    <script src="../../layui/layui.js"></script>
+    <script src="../../static/js/base.js"></script>
+    <script src="../../static/js/ax.js"></script>
+    <script src="../../static/js/jquery.cookie.js"></script>
+</head>
+<body>
+
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+       <label class="layui-form-label">省份</label>
+        <div class="layui-input-inline">
+            <select id="provinceId">
+                <option value="">请选择省</option>
+                <option value="2468">四川省</option>
+                <option value="2324">重庆市</option>
+            </select>
+        </div>
+        <label class="layui-form-label">市辖</label>
+        <div class="layui-input-inline">
+            <select id="cityId">
+                <option value="">请选择市</option>
+                <option value="2369">成都市</option>
+                <option value="2325">重庆市</option>
+            </select>
+        </div>
+        <button class="layui-btn" data-type="reload" id="searchBtn">搜索</button>
+        <button class="layui-btn" data-type="reloadClean">清空</button>
+    </div>
+</form>
+<div class="layui-form-item">
+    <div class="layui-btn-group">
+        <button class="layui-btn" onclick="addDivision()">增加</button>
+        <button class="layui-btn" onclick="updateDivision()">编辑</button>
+        <button class="layui-btn" id="delete">删除</button>
+    </div>
+</div>
+<table class="layui-hide" id="activeListTbale" lay-filter="active"></table>
+
+</body>
+
+<script>
+    var table;
+    var tableIns;
+    layui.use(['table', 'form', 'laydate', 'layer'], function () {
+        table = layui.table;
+        var form = layui.form,
+            layer = layui.layer;
+
+        tableIns = ax.VTable({
+            elem: '#activeListTbale',
+            url: '/api/division/list',
+            id: 'testReload',
+            cols: [[{
+                type: 'checkbox',
+                fixed: 'left'
+            }, {
+                field: 'id',
+                width: 80,
+                title: '序号',
+                fixed: 'left'
+            }, {
+                field: 'pac',
+                width: 160,
+                title: '省市',
+            }, {
+                field: 'name',
+                width: 160,
+                title: '车管所名称',
+            }, {
+                field: 'username',
+                width: 160,
+                title: '创建人',
+            }, {
+                field: 'updated',
+                width: 160,
+                title: '修改时间',
+                templet: '#stateTpl'
+            }, {
+                field: 'created',
+                width: 160,
+                title: '创建时间'
+            }/*,
+                {
+                    fixed: 'right',
+                    width: 160,
+                    title: '操作',
+                    toolbar: '#barDemo'
+                }*/]],
+
+        });
+
+        //监听工具条
+        table.on('tool(active)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+
+                layer.open({
+                    type: 2,
+                    title: ['查看文章', 'font-size:18px;'],
+                    shadeClose: true,
+                    area: ['800px', '500px'],
+                    offset: ['50px', '230px'],
+                    content: 'active/showMdText/' + data.activeId
+                });
+
+            } else if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    //修改
+                    $.ajax({
+                        type: "get",
+                        url: "/active/updateState/" + data.activeId,
+                        async: false,  //加了这个属性，
+                        error: function (request) {
+                            layer.confirm("网络错误!");
+                        },
+                        success: function (data) {
+
+                            if (data.code == 200) {
+                                layer.msg(data.msg);
+                                table.reload('testReload');
+                                layer.close(index);
+                            } else {
+                                layer.confirm(data.msg);
+                            }
+
+                        }
+                    });
+
+                });
+            } else if (obj.event === 'edit') {
+                layer.open({
+                    type: 2,
+                    title: ['修改文章', 'font-size:18px;'],
+                    shadeClose: true,
+                    maxmin: true,
+                    area: ['800px', '500px'],
+                    offset: ['50px', '230px'],
+                    content: 'active/updateActive/' + data.activeId
+                });
+
+            }
+        });
+
+        var $ = layui.$, division = {
+            reload: function(){
+                var demoReload = $('#demoReload');
+
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        provinceId: $("#provinceId").val(),
+                        cityId: $("#cityId").val()
+                    }
+                });
+            }
+        };
+
+      /*  //监听表格复选框选择
+        table.on('checkbox(active)', function (obj) {
+            console.log(obj)
+        });*/
+
+
+        $('#delete').on('click', function(){
+            //获取选中的数据
+            layer.confirm('真的删除这行数据么?', function(index){
+                var checkStatus = table.checkStatus('testReload'),data = checkStatus.data;
+                if(data.length>1){
+                    layer.close(index);
+                    layer.alert("最多选择一条数据");
+                    return;
+                }
+                var postData={"id":data[0].id};
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://localhost:60061/api/division/delete',
+                    contentType: "application/x-www-form-urlencoded",
+                    data: postData,
+                    success: function (r) {
+                        layer.close(index);
+                        layer.alert(r.message);
+                        reset();
+
+                    },
+                });
+            });
+        });
+
+        $('#searchBtn').on('click', function(){
+            var type = $(this).data('type');
+            division[type] ? division[type].call(this) : '';
+        });
+
+    });
+//重置页面
+function reset() {
+        //执行重载
+        table.reload('testReload', {
+            page: {
+                curr: 1 //重新从第 1 页开始
+            }
+            ,where: {
+            }
+    });
+}
+
+</script>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>部门管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+   <!-- <link rel="stylesheet" href="../../static/css/style.css"  media="all">-->
+    <!-- <link rel="stylesheet" href="../../static/css/zTreeStyle/zTreeStyle.css" />-->
+    <link rel="stylesheet" href="../../static/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <link rel="stylesheet" href="../../static/zTree_v3/css/metroStyle/metroStyle.css" type="text/css">
+    <script type="text/javascript" src="../../static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../../layui/layui.all.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../../static/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../../static/js/base.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../../static/js/ax.js"></script>
+    <!-- <script type="text/javascript" src="../../static/js/jquery.ztree.core.js" ></script>-->
+    <script type="text/javascript" src="../../static/zTree_v3/js/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="../../static/zTree_v3/js/jquery.ztree.excheck.js"></script>
+    <script type="text/javascript" src="../../static/zTree_v3/js/jquery.ztree.exedit.js"></script>
+
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<!--当前位置-->
+<!--<div class="layui-fluid position">
+    <div class="layui-row">
+        <p class="layui-col-xs6">
+            <span class="layui-breadcrumb" lay-separator=">"><a><cite class="t">您当前的位置</cite></a><a href="">首页</a><a><cite>学员管理列表</cite></a></span>
+        </p>
+        <p class="layui-col-xs6">2017年10月12日 14:11:42 星期四</p>
+    </div>
+</div>-->
+<!--当前位置-->
+
+<div class="layui-row">
+    <div class="layui-col-md2">
+        <ul class="ztree" id="treeDemo"></ul>
+        <ul class="ztree" id="ztree1"></ul>
+    </div>
+    <div class="layui-col-md9">
+        <div class="layui-row">
+            <div class="layui-col-xs4">
+                <label class="layui-form-label">岗位代码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="code" id="code" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-col-xs4">
+                <label class="layui-form-label">岗位名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" id="name" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-col-xs4">
+                <button class="layui-btn" data-type="reload" onclick="searchBtn()" style="margin-left: 10px;">搜索
+                </button>
+                <button class="layui-btn newsAdd_btn" style="margin-left: 10px;">新增</button>
+            </div>
+        </div>
+        <div class="layui-row">
+            <table class="layui-hide" id="position" lay-filter="eventBtn"></table>
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+<script>
+    var tableIns;
+    var departmentCode="";
+    var departmentName="";
+    var setting = {
+        /*   async : {
+               enable : true,//开启异步加载处理
+               url : encodeURI(encodeURI("/peTreeDemo2/jsondata")),
+               autoParam : [ "id" ],
+               //dataFilter : filter,
+               //contentType : "application/json",
+               type : "get"
+           },*/
+        view: {
+            expandSpeed: "",
+            addHoverDom: addHoverDom,
+            removeHoverDom: removeHoverDom,
+            selectedMulti: false
+        },
+        edit: {
+            enable: true
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            beforeRemove: beforeRemove,
+            beforeRename: beforeRename,
+            onClick : zTreeOnClick
+        }
+    };
+
+    function filter(treeId, parentNode, childNodes) {
+        if (!childNodes)
+            return null;
+        for (var i = 0, l = childNodes.length; i < l; i++) {
+            childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
+        }
+        return childNodes;
+    }
+    function getRoot() {
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+        //返回一个根节点
+        var node = treeObj.getNodesByFilter(function (node) { return node.level == 0 }, true);
+        if(node!=null){
+            departmentCode=node.depCode;
+            departmentName=node.name;
+        }
+    }
+    function getRoots() {
+        var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+        //返回根节点集合
+        var nodes = treeObj.getNodesByFilter(function (node) { return node.level == 0 });
+    }
+
+    //删除节点
+    function beforeRemove(treeId, treeNode) {
+      /*  layer.confirm('确认删除节点？', {
+            btn: ['确定','取消']
+        }, function(){
+            ax.get({
+                type: "get",
+                url: "/api/department/delDep",
+                data:{depId:treeNode.id},
+                success: function (data) {
+                    if(data.code==0){
+                        layer.msg(data.message);
+                    }
+                }
+            });
+        }, function(){
+            return false;
+        });*/
+       if (confirm("确认删除节点--" + treeNode.name + "--吗?")) {
+           //var param = "id=" + treeNode.id;
+           ax.get({
+               type: "get",
+               url: "/api/department/delDep",
+               data:{depId:treeNode.id},
+               success: function (data) {
+                   if(data.code==0){
+                       layer.msg(data.message);
+                   }
+               }
+           });
+        } else {
+            return false;
+        }
+    }
+
+    function beforeRename(treeId, treeNode, newName) {
+        if (newName.length == 0) {
+            layer.msg("节点名称不能为空.");
+            return false;
+        }
+        var json= JSON.stringify({depId:treeNode.id,name:newName});
+        ax.post({
+            type: "post",
+            url: "/api/department/updateDepartment",
+            data:json,
+            success: function (data) {
+                if(data.code==0){
+                    layer.msg(data.message);
+                }
+            }
+        });
+        return true;
+    }
+
+    function addHoverDom(treeId, treeNode) {
+        var sObj = $("#" + treeNode.tId + "_span");
+        if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0)
+            return;
+        var addStr = "<span class='button add' id='addBtn_" + treeNode.tId  + "' title='add node' onfocus='this.blur();'></span>";
+        sObj.after(addStr);
+        var btn = $("#addBtn_" + treeNode.tId);
+        if (btn)
+            btn.bind("click", function () {
+                layer.prompt({title: '新增节点', formType: 1}, function(pass, index){
+                    var Ppname=pass;
+                    if (Ppname == null || Ppname == "" ) {
+                        layer.msg("节点名称不能为空");
+                        return;
+                    }else{
+                        var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                        var json= JSON.stringify({depCode:treeNode.depCode,name:Ppname});
+                        ax.post({
+                            type: "post",
+                            url: "/api/department/addDepDepartment",
+                            data:json,
+                            success: function (data) {
+                                layer.msg(data.message);
+                                if(data.code==0){
+                                    zTree.addNodes(treeNode, { pId: treeNode.id, name: Ppname }, true);
+                                }
+                            }
+                        });
+                    }
+                    layer.close(index);
+                });
+
+            });
+    };
+
+    function removeHoverDom(treeId, treeNode) {
+        $("#addBtn_" + treeNode.tId).unbind().remove();
+    };
+    $(document).ready(function () {
+        ax.get({
+            type: "get",
+            url: "/api/department/getDepTree",
+            success: function (data) {
+                $.fn.zTree.init($("#treeDemo"), setting, data.data); //加载数据
+                getRoot();
+            }
+        });
+    });
+    function zTreeOnClick(e, treeId, treeNode) {
+        departmentCode=treeNode.depCode;
+        departmentName=treeNode.name;
+        tableIns.reload({
+            where: { //参数
+                'depCode':treeNode.depCode
+            }
+        });
+    }
+
+    $(document).ready(function(){
+        ax.get({
+            type: "get",
+            url: webUrl+"/api/department/getDepTree",
+            success: function (data) {
+                $.fn.zTree.init($("#treeDemo"), setting, data.data); //加载数据
+            }
+        });
+        layui.use(['table', 'layer'], function(){
+            var table = layui.table;
+            tableIns =ax.VTable({
+                elem: "#position",
+                id:"contenttable",
+                url:"/api/position/list",
+                method: 'POST',
+                cols: [[
+                    {field:'序列号', width:80, title: '序列号', sort: true,type:'numbers'},
+                    {field:'name', title: '岗位名称'},
+                    {field:'code', title: '岗位代码'},
+                    {field:'depName', title: '所属部门'},
+                    {field:'operatorName', title: '创建人'},
+                    {field:'created', title: '创建时间'},
+                    {field:'right', title: '操作',width: 270,toolbar:"#barDemo"}
+                ]]
+            });
+
+            table.on('tool(eventBtn)', function(obj){
+                var data = obj.data;
+                if(obj.event === 'del'){
+                    layer.confirm('确认删除？', function(index){
+                        $.ajax({
+                            url: webUrl+"/api/position/delPosition",
+                            type: "POST",
+                            data:{"id":data.id},
+                            success: function(data){
+                                if(data.code==0){
+                                    obj.del();
+                                    layer.close(index);
+                                    layer.msg(data.message, {icon: 6});
+                                }else{
+                                    layer.msg(data.message, {icon: 5});
+                                }
+                            }
+                        });
+                    });
+                } else if(obj.event === 'edit'){
+                    index = layui.layer.open({
+                        title : "编辑",
+                        type : 2,
+                        content : "positionUpdate.html?id="+data.id,
+                        success : function(layero, index){
+                            setTimeout(function(){
+                                layui.layer.tips('点击此处返回', '.layui-layer-setwin .layui-layer-close', {
+                                    tips: 3
+                                });
+                            },500)
+                        }
+                    })
+                    layui.layer.full(index);
+                }
+            });
+
+        });
+    });
+    //搜索
+    function searchBtn(){
+        tableIns.reload({
+            where: {
+                name:$("#name").val(),
+                code:$("#code").val(),
+                depCode:departmentCode
+            }
+        });
+    };
+    $(window).one("resize",function(){
+        $(".newsAdd_btn").click(function(){
+            if(departmentCode==""){
+                layer.msg("不存在部门组织");
+                return false;
+            }
+           var str= encodeURI('departmentCode='+encodeURI(departmentCode)+'&departmentName='+encodeURI(departmentName));
+            index = layui.layer.open({
+                id:'',
+                title : "新增岗位",
+                type : 2,
+                content : "positionAdd.html?"+str,
+                success : function(layero, index){
+                    getRoot();
+                    setTimeout(function(){
+                        layui.layer.tips('点击此处返回', '.layui-layer-setwin .layui-layer-close', {
+                            tips: 3
+                        });
+                    },500)
+                }
+            })
+            layui.layer.full(index);
+        });
+    }).resize();
+
+    /* var tableIns;
+     var departmentCode="";
+     var setting = {
+         data : {
+             simpleData : {
+                 enable : true
+             }
+         },
+         callback : {
+             onClick : zTreeOnClick
+         }
+     };
+     function zTreeOnClick(e, treeId, treeNode) {
+         departmentCode=treeNode.depCode;
+         tableIns.reload({
+             where: { //参数
+                 'depCode':treeNode.depCode
+             }
+         });
+     }
+
+     $(document).ready(function(){
+         ax.get({
+             type: "get",
+             url: webUrl+"/api/department/getDepTree",
+             success: function (data) {
+                 $.fn.zTree.init($("#treeDemo"), setting, data.data); //加载数据
+             }
+         });
+         layui.use(['table', 'layer'], function(){
+             var table = layui.table;
+             tableIns =ax.VTable({
+                 elem: "#position",
+                 id:"contenttable",
+                 url:"/api/position/list",
+                 method: 'POST',
+                 cols: [[
+                     {field:'序列号', width:80, title: '序列号', sort: true,type:'numbers'},
+                     {field:'name', title: '岗位名称'},
+                     {field:'code', title: '岗位代码'},
+                     {field:'depName', title: '所属部门'},
+                     {field:'operatorName', title: '创建人'},
+                     {field:'created', title: '创建时间'},
+                     {field:'right', title: '操作',width: 270,toolbar:"#barDemo"}
+                 ]]
+             });
+
+             table.on('tool(eventBtn)', function(obj){
+                 var data = obj.data;
+                 if(obj.event === 'del'){
+                     layer.confirm('确认删除？', function(index){
+                         $.ajax({
+                             url: webUrl+"/api/position/delPosition",
+                             type: "POST",
+                             data:{"id":data.id},
+                             success: function(data){
+                                 if(data.code==0){
+                                     obj.del();
+                                     layer.close(index);
+                                     layer.msg(data.message, {icon: 6});
+                                 }else{
+                                     layer.msg(data.message, {icon: 5});
+                                 }
+                             }
+                         });
+                     });
+                 } else if(obj.event === 'edit'){
+                     layui.layer.full(index);
+                 }
+             });
+
+         });
+     });
+     //搜索
+     function searchBtn(){
+         tableIns.reload({
+             where: {
+                 name:$("#name").val(),
+                 code:$("#code").val(),
+                 depCode:departmentCode
+             }
+         });
+     };
+     $(window).one("resize",function(){
+         $(".newsAdd_btn").click(function(){
+             index = layui.layer.open({
+                 id:'',
+                 title : "新增岗位",
+                 type : 2,
+                 content : "positionAdd.html",
+                 success : function(layero, index){
+                     setTimeout(function(){
+                         layui.layer.tips('点击此处返回', '.layui-layer-setwin .layui-layer-close', {
+                             tips: 3
+                         });
+                     },500)
+                 }
+             })
+             layui.layer.full(index);
+         });
+     }).resize();*/
+</script>
+</body>
+</html>

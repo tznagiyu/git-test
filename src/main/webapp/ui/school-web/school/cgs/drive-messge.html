@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>驾校管理新增</title>
+    <link href="../../layui/css/layui.css" rel="stylesheet">
+    <link href="css/layuiAdmin.css" rel="stylesheet">
+    <link href="../../static/css/style.css" rel="stylesheet">
+    <script src="../../static/js/jquery.min.js"></script>
+    <script src="../../static/js/jquery.cookie.js"></script>
+    <script src="../../layui/layui.js"></script>
+    <script src="../../static/js/base.js"></script>
+    <script src="../../static/js/ax.js"></script>
+
+</head>
+<body>
+
+<div class="layui-card xyxx">
+    <div class="layui-card-header">驾校基本信息</div>
+    <div class="layui-card-body">
+        <form class="layui-form" action="" lay-filter="component-form-element">
+            <div class="layui-row layui-col-space10">
+
+            </div>
+
+
+            <!--模板-->
+
+
+            <div class="layui-form-item layui-col-space10">
+                <div class="layui-input-block">
+                    <button type="reset" class="layui-btn layui-btn-primary btn-left">关闭</button>
+                    <button class="layui-btn btn-left" lay-submit lay-filter="component-form-element">提交</button>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+</body>
+
+<script>
+
+    var table;
+
+    layui.use(['table','form','laydate','layer','upload'], function() {
+        table = layui.table;
+        var form = layui.form,
+            laydate = layui.laydate,
+            layer=layui.layer,
+            $ = layui.jquery,
+            upload = layui.upload;
+
+        //常规用法
+        laydate.render({
+            elem: '#activeTime'
+            ,range: true
+        });
+
+
+
+        upload.render({
+            elem: '#test2'
+            ,url: '/upload/'
+            ,multiple: true
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#demo2').append('<img src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img">')
+                });
+            }
+            ,done: function(res){
+                //上传完毕
+            }
+        });
+
+
+
+
+    });
+
+
+</script>
+</html>

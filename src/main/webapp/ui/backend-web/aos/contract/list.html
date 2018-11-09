@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>合同管理列表</title>
+    <link href="../../layui/css/layui.css" rel="stylesheet">
+    <script src="../../static/js/jquery.min.js"></script>
+    <script src="../../static/js/jquery.cookie.js"></script>
+    <script src="../../layui/layui.js"></script>
+    <script src="../../static/js/base.js"></script>
+    <script src="../../static/js/ax.js"></script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <!--查询-->
+        <!--<div class="layui-form layui-card-header layuiadmin-card-header-auto">-->
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">合同编号</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="dscCode" placeholder="请输入合同编号" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">合同名称</label>
+                    <div class="layui-input-block">
+                        <input type="text"  id="dscName" placeholder="请输入合同名称" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">客户姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="dscCustomerName" placeholder="请输入客户姓名" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">签订人</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="dscSignName" placeholder="请输入签订人" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline layui-col-md3 layui-col-sm6">
+                    <label class="layui-form-label">时间类型</label>
+                    <div class="layui-input-block">
+                        <select id="timeType">
+                            <option value="dsc_sign">合同签订时间</option>
+                            <option value="dsc_start">合同开始时间</option>
+                            <option value="dsc_end">合同截止时间</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">时间范围起</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" id="fromTime">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">时间范围止</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" id="toTime">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <button type="reset" class="layui-btn">清空</button>
+                    <button id="doSearch" class="layui-btn">搜索</button>
+                </div>
+            </div>
+        </form>
+
+
+        <!--数据列表展示-->
+        <div class="layui-card-body">
+            <script type="text/html" id="optToolbar">
+                <div style="padding-bottom: 10px;">
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-event="addContract" >新增</button>
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-event="updateContract" >编辑</button>
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-event="delContract">删除</button>
+                    <button class="layui-btn layuiadmin-btn-useradmin" lay-event="viewContract">查看</button>
+                </div>
+            </script>
+
+            <table class="layui-hide" id="dataListTable"
+                   lay-filter="active"></table>
+        </div>
+
+
+    </div>
+</div>
+
+
+</body>
+
+<script>
+
+    var table;
+    var tableObj;
+
+    layui.use(['table','form','laydate','layer'], function() {
+        table = layui.table;
+        var form = layui.form,
+            layDateFrom = layui.laydate,
+            layDateTo = layui.laydate,
+            layer=layui.layer;
+
+        // 初始化日期控件
+        layDateFrom.render({
+            elem: '#fromTime'
+            // ,range: true
+        });
+        layDateTo.render({
+            elem: '#toTime'
+            // ,range: true
+        });
+
+        tableObj = ax.VTable({
+            id: 'loadDataList',
+            elem : '#dataListTable',
+            url : '/api/dsc/list',
+            toolbar: '#optToolbar',
+            title:'合同列表',
+            cols : [ [ {
+                type : 'checkbox',
+                fixed : 'left'
+            }, {
+                field : 'id',
+                width : 80,
+                title : '序号',
+                sort : true,
+                fixed : 'left'
+            }, {
+                field : 'dscCode',
+                title : '合同编号',
+                width : 150,
+                fixed : 'left'
+            }, {
+                field : 'dscName',
+                width : 150,
+                title : '合同名称',
+            }, {
+                field : 'dscCustomerName',
+                width : 150,
+                title : '客户姓名',
+            }, {
+                field : 'dscSignName',
+                minWidth : 150,
+                title : '签订人',
+            }, {
+                field : 'dscContactsName',
+                width : 150,
+                title : '联系人'
+            }, {
+                field : 'dscContactsPhone',
+                width : 120,
+                title : '联系人电话'
+            }, {
+                field : 'dscSignTime',
+                width : 150,
+                title : '签订时间'
+            }, {
+                field : 'dscBeginTime',
+                width : 150,
+                title : '开始时间'
+            }, {
+                field : 'dscEndTime',
+                width : 150,
+                title : '截止时间'
+            }, {
+                field : 'createUser',
+                width : 150,
+                title : '创建人'
+            }, {
+                field : 'createTime',
+                width : 150,
+                title : '创建时间'
+            } ] ]
+
+        });
+
+        var $ = layui.$;
+
+        $('#doSearch').on('click', function(){
+            searchData();
+        });
+
+        //头工具栏事件
+        table.on('toolbar()', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'delContract':
+                    var data = checkStatus.data;
+                    if(data.length<=0) {
+                        layer.open({
+                            title: '信息提示'
+                            ,content: '请选择删除的数据！'
+                        });
+                        break;
+                    }
+                    layer.confirm('确定需要删除选中的合同！', function (index) {
+                        var ids = [];
+                        for (var i = 0; i < data.length; i++) {
+                            ids.push(data[i].id);
+                        }
+                        delContract(ids.join(","));
+                    })
+
+                    break;
+                case 'addContract':
+                    layer.msg("新增");
+                    break;
+                case 'updateContract':
+                    var data = checkStatus.data;
+                    if(data.length<=0) {
+                        layer.open({
+                            title: '信息提示'
+                            ,content: '请选择编辑的数据！'
+                        });
+                        break;
+                    }
+                    layer.msg("编辑");
+                    break;
+                case 'viewContract':
+                    var data = checkStatus.data;
+                    if(data.length<=0) {
+                        layer.open({
+                            title: '信息提示'
+                            ,content: '请选择查看的数据！'
+                        });
+                        break;
+                    }
+                    layer.msg("查看");
+                    break;
+            };
+        });
+
+    });
+
+    function searchData() {
+        //执行重载
+        tableObj.reload({
+            page : {
+                curr: 1 //重新从第 1 页开始
+            },
+            where : {
+                dscCode : $('#dscCode').val(),
+                dscName : $('#dscName').val(),
+                dscCustomerName : $('#dscCustomerName').val(),
+                dscSignName : $('#dscSignName').val(),
+                timeType : $('#timeType').val(),
+                fromTime : $('#fromTime').val(),
+                toTime : $('#toTime').val()
+            }
+        });
+    }
+    //删除通知
+    function delContract(ids) {
+        var data={ids:ids};
+        ax.get({
+            url:"/api/dsc/delete",
+            data:data,
+            success:function (res) {
+                parent.layer.msg("删除成功");
+                searchData();
+            },
+            error : function(request) {
+                parent.layer.msg("系统错误，联系管理员");
+            }
+        });
+    }
+</script>
+</html>

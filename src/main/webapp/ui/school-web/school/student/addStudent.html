@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学员录入</title>
+    <link href="../../layui/css/layui.css" rel="stylesheet">
+    <link href="css/layuiAdmin.css" rel="stylesheet">
+    <link href="../../static/css/style.css" rel="stylesheet">
+    <script src="../../static/js/jquery.min.js"></script>
+    <script src="../../static/js/jquery.cookie.js"></script>
+    <script src="../../layui/layui.js"></script>
+    <script src="../../static/js/base.js"></script>
+    <script src="../../static/js/ax.js"></script>
+    <script src="js/constant.js"></script>
+</head>
+<body>
+
+<div class="layui-card xyxx">
+    <div class="layui-card-header">学员基本信息</div>
+    <div class="layui-card-body">
+        <form class="layui-form" action="" lay-filter="component-form-element">
+            <div class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">姓名：</label>
+                    <div class="layui-input-block" style="position: relative;">
+                        <input type="text" name="name" lay-verify="required" placeholder="" autocomplete="off" class="layui-input" style="width: 55%; margin-right: 10px; float: left;">
+                        <input id="Button1" type="button" class="layui-btn" value="读   卡"  style="position: absolute; right: 0;" onclick="return Button1_onclick()" />
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">证件类型：</label>
+                    <div class="layui-input-block">
+                        <select name="sfType" lay-verify="required" lay-filter="aihao">
+                            <option value="0">A:居民身份证</option>
+                            <option value="1"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">出生日期：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="birthday">
+                    </div>
+                </div>
+            </div>
+            <!--模板-->
+            <div class="layui-form-item layui-row layui-col-space10">
+
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">证件号码：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="certificatesNumber;">
+                    </div>
+                </div>
+
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">国籍：</label>
+                    <div class="layui-input-block">
+                        <select name="country" lay-verify="required" lay-filter="aihao">
+                            <option value="0">中国</option>
+                            <option value="1"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">身份证有效期至：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="idnumend">
+                    </div>
+                </div>
+
+            </div>
+            <!-------------------------0.0------------------------------->
+            <div class="layui-form-item layui-row layui-col-space10">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">性别：</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="man" value="男" title="男" >
+                            <input type="radio" name="woman" value="女" title="女">
+                        </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">学习类别：</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="first" value="初次申领" title="初次申领">
+                        <input type="radio" name="add" value="增驾" title="增驾" >
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">手机号码：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="phone">
+                    </div>
+                </div>
+            </div>
+            <!-------------------------0.0------------------------------->
+
+            <div class="layui-form-item layui-row layui-col-space10">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">准驾车型：</label>
+                    <div class="layui-input-block">
+                        <select name="carId" lay-verify="required" lay-filter="aihao">
+                            <option value="0" checked>c1</option>
+                            <option value="1">c2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">暂住证编号：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="stayAddreeNumber">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">电子邮箱：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="email">
+                    </div>
+                </div>
+            </div>
+
+            <!-------------------------0.0------------------------------->
+            <div class="layui-form-item layui-row layui-col-space10">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">所属辖区：</label>
+                    <div class="layui-input-block">
+                        <select name="registeredAreaId" lay-verify="required">
+                            <option value="0" checked>1</option>
+                            <option value="1">2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+
+                    <label class="layui-form-label">住所详细地址：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="addressDetailed">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">报名来源：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="registeredSource">
+                    </div>
+                </div>
+            </div>
+
+            <!-------------------------0.0------------------------------->
+
+            <div class="layui-form-item layui-row layui-col-space10">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">登记住所行政区划：</label>
+                    <div class="layui-input-block">
+                        <select name="registeredRegionId" lay-verify="required" >
+                            <option value="0" checked >请选择</option>
+                            <option value="1"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">登记住所详细地址：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="registeredResidence">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">来源：</label>
+                    <div class="layui-input-block">
+                      <!--  <input type="text" class="layui-input" name="field">-->
+
+                        <input type="text" class="layui-input" name="local">
+                    </div>
+                </div>
+            </div>
+
+            <!-------------------------0.0------------------------------->
+
+            <div class="layui-form-item layui-row layui-col-space10">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">学费：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="registeredTuition">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">学员编号：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="studentNumber">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">报名日期：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="registeredTime" id="registeredTime">
+                    </div>
+                </div>
+            </div>
+
+            <!-------------------------0.0------------------------------->
+
+            <div class="layui-form-item layui-row layui-col-space10">
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">(驾校)结构名称：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="driversId" value="2">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">推荐码：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="referralCode">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">待定：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" >
+                    </div>
+                </div>
+            </div>
+
+            <!-------------------------0.0------------------------------->
+            <div class="layui-row layui-col-space10">
+                <div class="layui-form-item layui-col-sm7">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <textarea name="reason" placeholder="请输入内容" class="layui-textarea" style="min-height: 135px;"></textarea>
+                    </div>
+                </div>
+                <div class="layui-upload layui-col-sm5">
+
+                    <div class="layui-upload-list file_img layui-badge-rim layui-input">
+                        <img class="layui-upload-img" id="demo1">
+                        <p id="demoText"></p>
+                    </div>
+                    <button type="button" name="" class="layui-btn" id="test1" style="margin-top: 95px;">上传图片</button>
+                </div>
+
+            </div>
+
+
+            <!-------------------------0.0------------------------------->
+            <div class="layui-form-item layui-row layui-col-space10">
+                <div class="layui-col-md4">
+
+                    <label class="layui-form-label">驾驶证申请表：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="driverDriver" class="layui-input" id="">
+                    </div>
+
+                </div>
+                <div class="layui-col-md4">
+
+                    <label class="layui-form-label">互联网面签协议：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="visaInterview">
+                    </div>
+
+                </div>
+                <div class="layui-col-md4">
+
+                    <label class="layui-form-label">指纹：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="fingerprint">
+                    </div>
+
+                </div>
+            </div>
+            <!-------------------------0.0------------------------------->
+            <div class="layui-form-item layui-row layui-col-space10">
+                <div class="layui-col-md4">
+
+                    <label class="layui-form-label">证件照：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="idPhoto">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">原驾驶证：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="originalDriverLicense">
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">待定：</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" >
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="submitStudent">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+</body>
+
+<script>
+
+    var table;
+
+    layui.use(['table','form','laydate','layer'], function() {
+        table = layui.table;
+        var form = layui.form,
+            laydate = layui.laydate,
+            layer=layui.layer;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#registeredTime' //指定元素
+        });
+
+        //监听提交
+        form.on('submit(submitStudent)', function(data){
+
+            console.log(JSON.stringify(data.field));
+            ax.post({
+                url:"/api/student/add",
+                data:  JSON.stringify(data.field),
+                success:function (res) {
+                   if(res.code == CODE.ERROR)
+                   {
+                       layer.msg(res.message);
+                       return false;
+                   }
+                   if (res.code == CODE.OK) {
+                       layer.msg(res.message);
+                   }
+
+                },
+                error : function(request) {
+                    layer.msg("添加失败，请联系管理员！");
+                }
+            });
+            return false;
+        });
+
+    });
+
+
+
+
+
+
+</script>
+</html>

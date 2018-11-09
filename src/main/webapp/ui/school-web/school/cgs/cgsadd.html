@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>车管所新增</title>
+    <link href="../../layui/css/layui.css" rel="stylesheet">
+    <link href="css/layuiAdmin.css" rel="stylesheet">
+    <link href="../../static/css/style.css" rel="stylesheet">
+    <script src="../../static/js/jquery.min.js"></script>
+    <script src="../../static/js/jquery.cookie.js"></script>
+    <script src="../../layui/layui.js"></script>
+    <script src="../../static/js/base.js"></script>
+    <script src="../../static/js/ax.js"></script>
+
+</head>
+<body>
+
+<div class="layui-card">
+    <div class="layui-card-header">车管所新增</div>
+    <div class="layui-card-body">
+        <form class="layui-form">
+            <div class="layui-row layui-col-space10 layui-form-item">
+
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">省份：</label>
+                    <div class="layui-input-block">
+                        <select name="sfType" lay-verify="required" lay-filter="aihao">
+                            <option value="0">重庆</option>
+                            <option value="1">重庆</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-md4">
+                    <label class="layui-form-label">市辖：</label>
+                    <div class="layui-input-block">
+                        <select name="sfType" lay-verify="required" lay-filter="aihao">
+                            <option value="0">请选择</option>
+                            <option value="1">重庆</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+            <!--模板-->
+            <div class="layui-col-space10 ">
+                <div class="layui-row ">
+
+                    <label class="layui-form-label">对应分所：</label>
+                    <div class="layui-input-block">
+                        <a class="layui-btn " id="add">
+                            <i class="layui-icon">&#xe608;</i> 添加
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="layui-form-item cgs-list" id="cgs_addlist">
+
+
+
+            </div>
+
+            <div class="layui-form-item layui-col-space10">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="component-form-element">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+</body>
+
+<script>
+    $(function () {
+        addRow();
+    })
+
+
+
+    $('#add').click(function () {
+        addRow();
+    });
+
+    function addRow(){
+        $('#cgs_addlist').append('<div class="cgsaddlist layui-row layui-col-space10">\n' +
+            '                    <div class="layui-col-sm4">\n' +
+            '                        <label class="layui-form-label">分所代码：</label>\n' +
+            '                        <div class="layui-input-block">\n' +
+            '                            <input type="text"  placeholder="请输入手机号码" autocomplete="off" class="layui-input">\n' +
+            '                        </div>\n' +
+            '                    </div>\n' +
+            '                    <div class="layui-col-sm4">\n' +
+            '                        <label class="layui-form-label">分所名称：</label>\n' +
+            '                        <div class="layui-input-block">\n' +
+            '                            <input type="text"  placeholder="请输入手机号码" autocomplete="off" class="layui-input">\n' +
+            '                        </div>\n' +
+            '                    </div>\n' +
+            '                    <div class="layui-col-sm4">\n' +
+            '\n' +
+            '\n' +
+            '                        <button class="layui-btn layui-btn-danger remover_btn mleft">\n' +
+            '                            删除\n' +
+            '                        </button>\n' +
+            '\n' +
+            '                    </div>\n' +
+            '\n' +
+            '                </div>');
+        $('#cgs_addlist .remover_btn').bind('click',function(){
+            $(this).parents('.cgsaddlist').remove();
+        });
+    }
+    var table;
+
+    layui.use(['table','form','laydate','layer','upload'], function() {
+        table = layui.table;
+        var form = layui.form,
+            laydate = layui.laydate,
+            layer=layui.layer,
+            upload = layui.upload,
+            $ = layui.jquery;
+
+        //常规用法
+        laydate.render({
+            elem: '#activeTime'
+            ,range: true
+        });
+
+
+
+    });
+
+
+</script>
+</html>

@@ -1,0 +1,24 @@
+body{background: #eeeeee;}
+.hearder{width: 100%; height: 565px; background: url(../images/login_bg.jpg); padding-top: 138px;}
+.logo{width: 518px; height: 78px; margin:  0 auto;}
+.logo img{display: block; width: 100%;}
+.hearder h2{font-size: 38px; color: #fff; text-align: center; margin-top: 50px;}
+.login_wrap{width: 510px; height: auto; background: url(../images/bg1.png); -webkit-border-radius: 10px;-moz-border-radius: 10px;-ms-border-radius: 10px;-o-border-radius: 10px;border-radius: 10px; -webkit-box-shadow:0 0 5px #e3e5e7 ;-moz-box-shadow:0 0 5px #e3e5e7 ;-ms-box-shadow:0 0 5px #e3e5e7 ;-o-box-shadow:0 0 5px #e3e5e7 ;box-shadow:0 0 5px #e3e5e7 ; margin:  0 auto; margin-top: -204px; padding: 50px 45px 30px 45px;}
+.login p{height: 44px; margin-bottom:20px; padding:0 25px ; -webkit-box-shadow:0 0 5px #e3e5e7 ;-moz-box-shadow:0 0 5px #e3e5e7 ;-ms-box-shadow:0 0 5px #e3e5e7 ;-o-box-shadow:0 0 5px #e3e5e7 ;box-shadow:0 0 5px #e3e5e7 ;-webkit-border-radius: 5px;-moz-border-radius: 5px;-ms-border-radius: 5px;-o-border-radius: 5px;border-radius: 5px; background: #fff;position: relative;}
+.login p span{width: 16px; height: 100%; display: block; float: left; background: url(../images/login_icon1.png) no-repeat center; }
+.login p .placeholder {position: absolute;width:330px ; line-height: 44px; top: 0;z-index: 10;color: #999999; right: 25px; font-weight: normal;}
+.login p input{width: 330px; display: block; float: right; height: 100%; line-height: 44px; border: 0;}
+.login p.num input{width: 180px; float: left;margin-left:24px;}
+.login p.num i{float: right; height: 100%; line-height: 44px;}
+.login p.num i img{max-height: 100%;}
+.login p+p span{background: url(../images/login_icon2.png) no-repeat center;}
+.login p+p+p span{background: url(../images/login_icon3.png) no-repeat center;}
+.login h6{margin-bottom:20px;}
+.login h6 input{font-size: 16px; color: #666666;}
+input:focus{outline: none;}
+.login h6 a{float: right; font-size: 16px; color: #57bfc7;}
+.login h6 .placeholder {position: absolute;top: 0;z-index: 10;color: #c4c5c5; left: 50px; font-weight: normal;}
+.login p.button_1{padding: 0; background: #57bfc7;}
+.login p.button_1 input,.login p.button_2 input{float: none; width: 100%; height: 100%; font-size: 18px; color: #fff; background: transparent;}
+.login p.button_2{padding: 0; background: transparent; border: 1px solid #57bfc7; }
+.login p.button_2 input{color:#57bfc7 ;}
